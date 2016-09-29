@@ -1,0 +1,37 @@
+{
+  "name": "shezpower",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "version": "1.0.0",
+  "description": "shezpower is ecommerce platform for the women. This platform provides the women entreprenurs to display their products.",
+  "main": "server.js",
+  "author": "ram",
+  "dependencies": {
+    "async": "^1.5.2",
+    "body-parser": "^1.13.3",
+    "crypto-js": "^3.1.6",
+    "express": "^4.13.3",
+    "fs": "0.0.2",
+    "jade": "^1.11.0",
+    "jsonschema": "^1.1.0",
+    "mongodb": "^2.1.11",
+    "multer": "^1.2.0",
+    "node-json2html": "^1.0.0",
+    "nodemailer": "^0.7.1",
+    "path": "^0.12.7",
+    "winston": "^2.2.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "npm"
+  },
+  "keywords": [
+    "women",
+    "ecommerce",
+    "entreprenurs"
+  ],
+  "license": "ISC"
+}

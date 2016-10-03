@@ -8,4 +8,4 @@ Server side RESTful api delivers the JSON data from mongodb.
 Ramprasath R
 
 ## License
-License to Shezpower Innovation LLp
+License to Shezpower Innovation LLP

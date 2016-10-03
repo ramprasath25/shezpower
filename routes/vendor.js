@@ -1,12 +1,11 @@
+/**** Vendors Routes ****/
 var express = require('express');
 var app = express.Router();
-var vendorRegister = require('../modals/vendors/vendor_reg');
-var vendorLogin = require('../modals/vendors/vendor_login');
-var product = require('../modals/vendors/add_product');
-var productList = require('../modals/product_list');
-var vendorPass = require('../modals/vendors/vendor_pass');
-var multer  = require('multer');
-var upload = multer({ dest: 'uploads/' });
+var vendorRegister = require('../controllers/vendors/vendor_reg');
+var vendorLogin = require('../controllers/vendors/vendor_login');
+var product = require('../controllers/vendors/add_product');
+var productList = require('../controllers/users/product_list');
+var vendorPass = require('../controllers/vendors/vendor_pass');
 
 /* GET home page. */
 app.get('/', function(req, res, next) {
@@ -17,7 +16,6 @@ app.get('/', function(req, res, next) {
 app.post('/register', function(req, res){
     vendorRegister.register(req.body, function(err, status){
         if(err){
-
             if(status == 0){
                 res.status(202).json({ "status": 202, "http_message" : "Mobile no or mail id already registered" });
             }
@@ -84,7 +82,21 @@ app.post('/getProductList', function(req, res){
   });
 });
 
-app.post('/testProduct', function(req, res){
-  console.log(req.files);
+app.post('/upload', function(req, res) {
+    
+    var file = req.files.detail_img;
+    var filepath= './Images/'+ file.name;
+    file.mv(filepath, function(err) {
+        if (err) {
+            res.status(500).send(err);
+        }
+        else {
+            res.send('File uploaded!');
+        }
+    });
+    // if (!req.files) {
+    //     res.send('No files were uploaded.');
+    //     return;
+    // }    
 });
 module.exports = app;

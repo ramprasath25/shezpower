@@ -1,5 +1,5 @@
 /*** Product List ***/
-var mongodb = require('../helpers/mongodb');
+var mongodb = require('../../helpers/mongodb');
 
 
 exports.getList = function (cat_id, callback){

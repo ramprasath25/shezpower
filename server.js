@@ -5,20 +5,21 @@ var path  = require('path');
 var bodyParser = require('body-parser');
 var config = require('./helpers/configuration');
 var mongodb = require('./helpers/mongodb');
+var fileUpload = require('express-fileupload');
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
- 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(fileUpload());
 app.use(express.static(__dirname + '/public'));
+/** CROS-Request ***/
 app.use(function(req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
-    res.setHeader('Access-Control-Allow-Origin', 'http://128.199.142.243');
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    res.header("Access-Control-Allow-Methods", 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.header("Access-Control-Allow-Origin", req.headers.origin);
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    res.header("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS");
+    res.header("Access-Control-Allow-Credentials", true);
     next();
 });
 
@@ -46,7 +47,7 @@ mongodb.connect('mongodb://127.0.0.1:27017/local', function(err) {
     process.exit(1)
   }
   else {
-      app.listen(config.port,function(){
+        app.listen(config.port,function(){
         console.log('Connected to mongodb');
         console.log("Server is running on port : "+config.port);
       });

@@ -1,6 +1,7 @@
+/**** Admin Routes ****/
 var express = require('express');
 var app = express.Router();
-var vendorList = require('../modals/admin/vendor_list');
+var vendorList = require('../controllers/admin/vendor_list');
 
 /* GET home page. */
 app.get('/', function(req, res, next) {

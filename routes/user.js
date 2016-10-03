@@ -1,6 +1,7 @@
+/**** Users Routes ****/
 var express = require('express');
 var app = express.Router();
-var products = require('../modals/user_productlist');
+var products = require('../controllers/users/user_productlist');
 
 /* GET home page. */
 app.get('/', function(req, res, next) {

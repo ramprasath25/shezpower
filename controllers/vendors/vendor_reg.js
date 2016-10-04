@@ -47,7 +47,7 @@ function checkVendor (data, callback){
 
 // Login Table
 var registerVendor = function (data, callback){
-  data.vendor_id = 'shez'+crypto.randomBytes(12);
+  data.vendor_id = 'shez'+ Math.floor(100000000 + Math.random() * 900000000);
   var encryptPass = crypto.createHash('md5').update("welcome").digest("hex");
 
   var doc =   { 

@@ -2,6 +2,25 @@
 var crypto = require('crypto');
 var mongodb = require('../../helpers/mongodb');
 var mailConfig = require('../../helpers/email');
+var mailgun = require('../../helpers/mailConfig');
+
+exports.sendMail = function(callback){
+  var data = {
+  from: 'Excited User <me@samples.mailgun.org>',
+  to: 'serobnic@mail.ru',
+  subject: 'Hello',
+  text: 'Testing some Mailgun awesomness!'
+  };
+
+
+
+  console.log(mailgun);
+
+
+  // mailgun.messages().send(data, function (error, body) {
+  //     callback(false, "Registered Successful");
+  // });
+};
 
 // Registration
 exports.register = function(data, callback){     
@@ -18,112 +37,108 @@ exports.register = function(data, callback){
 
 function checkVendor (data, callback){
   //Check count for mobile and email already registered
-  mongodb.get().collection('login').find({$or : [{email : data.email}, {mobileNo : data.mobileNo}]}, function(err, coll) {
-            coll.count (function(error, count) {
-                if(error){
-                  callback(true, error);
-                }
-                else{ 
-                    // Already registerd throw status                 
-                    if(count > 1){
-                      callback(true, 0);
+  mongodb.get().collection('login').findOne({ $or: [ { "email": data.email }, { "mobileNo": data.mobileNo } ] }, 
+    function(err, result) {            
+        if(err){
+          callback(true, err);
+        }
+        else{         
+            // If New User
+            if(result === null){
+              registerVendor (data, function(err, status){
+                    if(err){
+                      callback(true, status);
                     }
-                    else{ 
-                         //if not registered
-                        registerVendor (data, function(err, status){
-                        if(err){
-                          callback(true, status);
-                        }
-                        else{
-                          callback(false, status);
-                        }
-                      });
+                    else{
+                      callback(false, status);
                     }
-                }
-
-            });
-      });
-};
-
-// Login Table
-var registerVendor = function (data, callback){
-  data.vendor_id = 'shez'+ Math.floor(100000000 + Math.random() * 900000000);
-  var encryptPass = crypto.createHash('md5').update("welcome").digest("hex");
-
-  var doc =   { 
-                "vendor_id" : data.vendor_id,
-                "businessType" : "product",
-                "registration_ts" : "",
-                "verification" : {
-                  "emailVerified" : true,
-                  "emailVerified_ts" : "",
-                },
-                "vendorDetails" : {
-                  "firstName" : "Ram", 
-                  "lastName" : "prasath", 
-                  "mobileNo" : "9845566846", 
-                  "email" : "ramprasath25@gmail.com", 
-                  "address1" : "sakambari nagar", 
-                  "address2" : "Banashankari", 
-                  "city" : "Bangalore", 
-                  "zipcode" : "560070", 
-                  "state" : "Karnataka"
-                },
-                "companyInfo" : {
-                  "companyName" : "rams pvt ltd", 
-                  "establishment" : "2", 
-                  "panNo" : "BEJPR4903L", 
-                  "tanNo" : "KA15W4534", 
-                  "website" : "www.shezpower.com", 
-                  "telephone" : "080269764"
-                }    
+                });
             }
-            console.log(JSON.stringify(doc));
-  // mongodb.get().collection('login').insert({
-  //   "email"    : data.email,
-  //   "mobileNo" : data.mobileNo,
-  //   "password" : encryptPass,
-  //   "vendorId" : data.vendor_id,
-  //   "active"   : false
-  //   }, function(err, status){
-  //       if(err){
-  //         callback(true, err);
-  //       }
-  //       else{
-  //         // Register Vendor Details
-  //           registerVendorDetails(data, function(err, status){
-  //               if(err){
-  //                 callback(true, status);
-  //               }
-  //               else{
-  //                 callback(false, status);
-  //               }
-  //           });
-  //       }
-  // });
+            else{
+              // IF already Registered
+               callback(true, 0); 
+            }
+        }
+    });
 };
-var registerVendorDetails = function (details, callback){
-  //  delete details['password'];
-    mongodb.get().collection('vendor_details').insert(details, function(err, status){
+
+// Login Collection
+var registerVendor = function (data, callback){
+    /** Generating Vendor Id **/
+    data.vendor_id = 'shez'+ Math.floor(100000000 + Math.random() * 900000000);
+   //data.password
+    var encryptPass = crypto.createHash('md5').update("welcome").digest("hex");
+    var loginDetails = {
+        "email" : data.email, 
+        "mobileNo" : data.mobileNo, 
+        "password" : encryptPass, 
+        "vendor_id" : data.vendor_id,
+        "last_login_ts" : "",
+        "registration_ts" : new Date(),
+        "approved" : false
+    }
+  /****  Login Collection *****/
+  mongodb.get().collection('login').insert(loginDetails, function(err, status){
         if(err){
           callback(true, err);
         }
         else{
-          var obj = details;
-          var emailText = '';
-          for(var prop in obj) {
-              if(obj.hasOwnProperty(prop)){
-                  emailText +=  prop + " : "+ obj[prop] + ", ";
-                }                
-          }
-          //callback(false, "Registered Successful");
-          mailConfig.sendEmail(emailText, function(error, status){
-            if(error){
-              callback(true, error);
-            }
-            else{
+          // Register Vendor Details
+            registerVendorDetails(data, function(err, status){
+                if(err){
+                  callback(true, status);
+                }
+                else{
+                  callback(false, status);
+                }
+            });
+        }
+  });
+};
+/*** Vendor Details collection ****/
+var registerVendorDetails = function (data, callback){
+  var vendorDetails =   { 
+        "vendor_id" : data.vendor_id,
+        "businessType" : data.type,
+        "verification" : {
+          "emailVerified" : false,
+          "emailVerified_ts" : "",
+        },
+        "vendorDetails" : {
+          "firstName" : data.firstName, 
+          "lastName" : data.lastName, 
+          "mobileNo" : data.mobileNo, 
+          "email" : data.email, 
+          "address1" : data.address1, 
+          "address2" : data.address2, 
+          "city" : data.city, 
+          "zipcode" : data.zipcode, 
+          "state" : data.state
+        },
+        "companyInfo" : {
+          "companyName" : data.companyName, 
+          "establishment" : data.years, 
+          "panNo" : data.panNo, 
+          "tanNo" : data.panNo, 
+          "website" : data.website, 
+          "telephone" : data.telephone
+        }    
+    }
+   /** Vendor collection***/
+    mongodb.get().collection('vendor_details').insert(vendorDetails, function(err, status){
+        if(err){
+          callback(true, err);
+        }
+        else{
+          /***  Sending mail to admin ****/          
+          var data = {
+            from: 'support@shezpower.com',
+            to: 'ramprasath25@gmail.com',
+            subject: 'New Registration',
+            text: 'New Registration came for shezpower. Please activate the vendor using admin panel.'
+          };
+          mailgun.messages().send(data, function (error, body) {
               callback(false, "Registered Successful");
-            }
           });
         }
     });

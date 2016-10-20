@@ -3,13 +3,22 @@ var express = require('express');
 var app = express.Router();
 var vendorRegister = require('../controllers/vendors/vendor_reg');
 var vendorLogin = require('../controllers/vendors/vendor_login');
-var product = require('../controllers/vendors/add_product');
-var productList = require('../controllers/users/product_list');
-var vendorPass = require('../controllers/vendors/vendor_pass');
+var vendorProduct = require('../controllers/vendors/products');
 
 /* GET home page. */
 app.get('/', function(req, res, next) {
   res.render('index', { title: 'shezpower.com vendor' });
+});
+
+app.get('/sendMail', function(req, res){
+  vendorRegister.sendMail(function(err, status){
+    if(err){
+      res.json({message:"Mail not sent"});
+    }
+    else{
+      res.json({message : "Mail sent Success"});
+    }
+  });
 });
 
 /*** Vendor Register ***/
@@ -34,7 +43,7 @@ app.post('/login', function(req, res){
   vendorLogin.login(req.body, function(err, status){
       if(err){
         if(status == 0){
-          res.json({ "http_code":400, "http_message":"Mobile no or mail id not registered" });
+          res.json({ "http_code":400, "http_message":"Invalid username/ password" });
         }
         else{
             res.json({ "http_code":500, "http_message":"Internal server error", "message":status });
@@ -48,7 +57,7 @@ app.post('/login', function(req, res){
 
 /** Change Password **/
 app.post('/changePassword', function(req, res){
-  vendorPass.changePass(req.body, function(err, status){
+  vendorLogin.changePass(req.body, function(err, status){
     if(err){
         res.status(500).json({ "http_code":500, "http_message":"Internal server error", "message":status });
       }
@@ -60,7 +69,7 @@ app.post('/changePassword', function(req, res){
 
 /** Adding Product **/
 app.post('/addProduct', function(req, res){
-  product.createProduct(req.body, function(err, status){
+  vendorProduct.addProduct(req, function(err, status){
       if(err){
         res.json({ "http_code":500, "http_message":"Internal server error", "message":status });
       }
@@ -72,31 +81,26 @@ app.post('/addProduct', function(req, res){
 
 /** Getting Product List **/
 app.post('/getProductList', function(req, res){
-  productList.getProduct(req.body, function(err, products){
+  vendorProduct.getProduct(req.body.vendor_id, function(err, products){
       if(err){
         res.json({ "http_code":500, "http_message":"Internal server error", "message":products });
       }
       else{
-        res.json({ "http_code":200, "http_message":"Ok, Success", "Products":products });
+        res.json({ "http_code":200, "http_message":"Ok, Success", "productsList":products });
       }
   });
 });
 
-app.post('/upload', function(req, res) {
-    
-    var file = req.files.detail_img;
-    var filepath= './Images/'+ file.name;
-    file.mv(filepath, function(err) {
-        if (err) {
-            res.status(500).send(err);
-        }
-        else {
-            res.send('File uploaded!');
-        }
-    });
-    // if (!req.files) {
-    //     res.send('No files were uploaded.');
-    //     return;
-    // }    
+/** Getting Product Details **/
+app.post('/getProductDetails', function(req, res){
+  vendorProduct.productDetails(req.body, function(err, details){
+    if(err){
+        res.json({ "http_code":500, "http_message":"Internal server error", "message":details });
+      }
+      else{
+        res.json({ "http_code":200, "http_message":"Ok, Success", "Detail":details });
+      }
+  });
 });
+
 module.exports = app;

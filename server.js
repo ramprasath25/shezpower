@@ -14,6 +14,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(fileUpload());
 app.use(express.static(__dirname + '/public'));
+app.use('/Images', express.static('Images'))
 /** CROS-Request ***/
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", req.headers.origin);

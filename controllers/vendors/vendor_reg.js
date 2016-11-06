@@ -4,24 +4,6 @@ var mongodb = require('../../helpers/mongodb');
 var mailConfig = require('../../helpers/email');
 var mailgun = require('../../helpers/mailConfig');
 
-exports.sendMail = function(callback){
-  var data = {
-  from: 'Excited User <me@samples.mailgun.org>',
-  to: 'serobnic@mail.ru',
-  subject: 'Hello',
-  text: 'Testing some Mailgun awesomness!'
-  };
-
-
-
-  console.log(mailgun);
-
-
-  // mailgun.messages().send(data, function (error, body) {
-  //     callback(false, "Registered Successful");
-  // });
-};
-
 // Registration
 exports.register = function(data, callback){     
     //Check wether vendor exists

@@ -1,9 +1,9 @@
 /*** Product List ***/
 var mongodb = require('../../helpers/mongodb');
 /** Getting product list for users **/
-exports.getList = function (data, callback){
+exports.getList = function (category, callback){
     mongodb.get().collection('product_details').find(
-            { "category_id" : data.cat_id, "active" : true },
+            { "sub_category" : category, "active" : true },
             { "_id" : 0, "p_id" : 1, "vendor_id" : 1, "title" : 1,
             "short_description" : 1, "images.thumbnail_img" : 1,
             "priceDetails" : 1, "unitOfMeasurement" : 1}).toArray( function(err, result){

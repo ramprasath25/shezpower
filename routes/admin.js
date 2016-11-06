@@ -34,7 +34,7 @@ app.post('/getVendorDetails', function(req, res){
 
 /*** Activate Vendor ***/
 app.post('/activateVendor', function(req, res){
-  vendorList.activate(req.body.vendorId, function(err, status){
+  vendorList.activate(req.body.vendor_id, function(err, status){
         if(err){            
             res.status(500).json({ "status": 500, "http_message":"Internal server error" });            
         }

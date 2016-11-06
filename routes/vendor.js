@@ -10,17 +10,6 @@ app.get('/', function(req, res, next) {
   res.render('index', { title: 'shezpower.com vendor' });
 });
 
-app.get('/sendMail', function(req, res){
-  vendorRegister.sendMail(function(err, status){
-    if(err){
-      res.json({message:"Mail not sent"});
-    }
-    else{
-      res.json({message : "Mail sent Success"});
-    }
-  });
-});
-
 /*** Vendor Register ***/
 app.post('/register', function(req, res){
     vendorRegister.register(req.body, function(err, status){
@@ -80,7 +69,7 @@ app.post('/addProduct', function(req, res){
 });
 
 /** Getting Product List **/
-app.post('/getProductList', function(req, res){
+app.post('/getProductList', function(req, res){ 
   vendorProduct.getProduct(req.body.vendor_id, function(err, products){
       if(err){
         res.json({ "http_code":500, "http_message":"Internal server error", "message":products });
@@ -91,6 +80,17 @@ app.post('/getProductList', function(req, res){
   });
 });
 
+/*** Get Category List ***/
+app.post('/getCategoryList', function(req, res){
+  vendorProduct.getCategoryList(req.body.type, function(err, list){
+      if(err){
+        res.json({ "http_code":500, "http_message":"Internal server error", "message":list });
+      }
+      else{
+        res.json({ "http_code":200, "http_message":"Ok, Success", "CategoryList":list });
+      }
+  });
+})
 /** Getting Product Details **/
 app.post('/getProductDetails', function(req, res){
   vendorProduct.productDetails(req.body, function(err, details){

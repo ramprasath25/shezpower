@@ -10,28 +10,28 @@ exports.addProduct = function (data, callback){
       var doc = {   
               "p_id" : productId, 
               "vendor_id" : data.body.vendor_id,
-              "category" : data.category,
-              "category_id" : data.category_id,
-              "title" : data.title,
-              "short_description" : data.short_description, 
-              "description" : data.description,     
+              "category" : data.body.category,
+              "sub_category" : data.body.sub_category,
+              "title" : data.body.title,
+              "short_description" : data.body.short_description, 
+              "description" : data.body.description,     
               "images" : {
                     "thumbnail_img" : "", 
                     "detail_img" : ""
               },
               "priceDetails" : {
-                "marketPrice" : data.marketPrice,
-                "discountPrice" : data.discountPrice,
-                "discount" : data.discount,
-                "discountEndDate" : data.discountEndDate,
-                "currency" : data.currency
+                "marketPrice" : data.body.marketPrice,
+                "discountPrice" : data.body.discountPrice,
+                "discount" : data.body.discount,
+                "discountEndDate" : data.body.discountEndDate,
+                "currency" : data.body.currency
               },     
-              "unitOfMeasurement" : data.unitOfMeasurement,
+              "unitOfMeasurement" : data.body.unitOfMeasurement,
               "specification" : {
                 
               },
-              "stocksLeft" : data.stocksLeft,
-              "shippingDetail" : data.shippingDetail,
+              "stocksLeft" : data.body.stocksLeft,
+              "shippingDetail" : data.body.shippingDetail,
               "active" : true,
               "created_ts" : new Date(), 
               "updated_ts" : ""
@@ -157,3 +157,15 @@ exports.productDetails = function(req, callback){
                     }
               });
 };
+/*** Get Category List ***/
+exports.getCategoryList = function(req, callback){
+  mongodb.get().collection('menu_category').find({"category" : req, "active" : true},{ "active" : 0}).toArray(function(err, result){
+      if(err){
+        callback(true, result);
+      }
+      else{
+        callback(false, result);
+      }
+  })
+}
+

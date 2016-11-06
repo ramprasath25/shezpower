@@ -9,7 +9,7 @@ app.get('/', function(req, res, next) {
 });
 // Product List
 app.post('/listProducts', function(req, res){
-    products.getList(req.body.cat_id, function(err, products){
+    products.getList(req.body.category, function(err, products){
       if(err){
         res.json({ "http_code":500, "http_message":"Internal server error"});
       }

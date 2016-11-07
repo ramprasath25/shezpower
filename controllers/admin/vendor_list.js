@@ -71,9 +71,9 @@ var sendUserMail = function(details, callback){
           '<div class="row">'+
             '<div class="col-xs-6 col-lg-4">'+            
               '<p>Next time login with mail id/ mobile number</p>'+
-              '<p>Your mail address :  <a href=''>'+details.email+'</a></p>'+
-              '<p>Your mobile number :  <a href=''>'+details.mobileNo+'</a></p>'+
-              '<p>Password : <a href=''>welcome</a></p>'+
+              '<p>Your mail address :  <a href="">'+details.email+'</a></p>'+
+              '<p>Your mobile number :  <a href="">'+details.mobileNo+'</a></p>'+
+              '<p>Password : <a href="">welcome</a></p>'+
               '<p><a class="btn btn-default" href="#" role="button">Login &raquo;</a></p>'+
             '</div>'+
           '</div>'+

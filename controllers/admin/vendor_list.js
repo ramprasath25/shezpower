@@ -61,7 +61,29 @@ var sendUserMail = function(details, callback){
     from: 'support@shezpower.com',
     to: details.email,
     subject: 'Thanks for registering with us.',
-    text: 'Please login with registered Email id or Mobile no. Password : welcome'
+    text: '<div class="container">'+
+      '<div class="row row-offcanvas row-offcanvas-right">'+
+        '<div class="col-xs-12 col-sm-12">  '+        
+          '<div class="jumbotron">'+
+            '<h2>Thanks for registering with shezpower.com</h2>'+
+            '<p>Welcome to our family</p>'+
+          '</div>'+
+          '<div class="row">'+
+            '<div class="col-xs-6 col-lg-4">'+            
+              '<p>Next time login with mail id/ mobile number</p>'+
+              '<p>Your mail address :  <a href=''>'+details.email+'</a></p>'+
+              '<p>Your mobile number :  <a href=''>'+details.mobileNo+'</a></p>'+
+              '<p>Password : <a href=''>welcome</a></p>'+
+              '<p><a class="btn btn-default" href="#" role="button">Login &raquo;</a></p>'+
+            '</div>'+
+          '</div>'+
+        '</div>'+  
+      '</div>'+
+      '<hr>'+
+      '<footer>'+
+        '<p>&copy; 2016 Shezpower LLP.</p>'+
+      '</footer>'+
+    '</div>'
   };
   mailgun.messages().send(data, function (error, body) {
       callback(false, "Activated Successfully..");

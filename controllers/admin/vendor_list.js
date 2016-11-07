@@ -74,7 +74,7 @@ var sendUserMail = function(details, callback){
               '<p>Your mail address :  <a href="">'+details.email+'</a></p>'+
               '<p>Your mobile number :  <a href="">'+details.mobileNo+'</a></p>'+
               '<p>Password : <a href="">welcome</a></p>'+
-              '<p><a class="btn btn-default" href="http://www.shezpower.com/login" role="button">Login &raquo;</a></p>'+
+              '<p><a class="btn btn-default" href="http://www.shezpower.com/login.html" role="button">Login &raquo;</a></p>'+
             '</div>'+
           '</div>'+
         '</div>'+  

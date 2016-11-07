@@ -61,7 +61,7 @@ var sendUserMail = function(details, callback){
     from: 'support@shezpower.com',
     to: details.email,
     subject: 'Thanks for registering with us.',
-    text: '<div class="container">'+
+    html: '<div class="container">'+
       '<div class="row row-offcanvas row-offcanvas-right">'+
         '<div class="col-xs-12 col-sm-12">  '+        
           '<div class="jumbotron">'+
@@ -74,7 +74,7 @@ var sendUserMail = function(details, callback){
               '<p>Your mail address :  <a href="">'+details.email+'</a></p>'+
               '<p>Your mobile number :  <a href="">'+details.mobileNo+'</a></p>'+
               '<p>Password : <a href="">welcome</a></p>'+
-              '<p><a class="btn btn-default" href="#" role="button">Login &raquo;</a></p>'+
+              '<p><a class="btn btn-default" href="www.shezpower.com/login" role="button">Login &raquo;</a></p>'+
             '</div>'+
           '</div>'+
         '</div>'+  
